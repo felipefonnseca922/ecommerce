@@ -13,12 +13,12 @@ private $defaults = [
 ];
 
  //beginning
- public function __construct($opts = array()){
+ public function __construct($opts = array(), $tpl_dir = "/views/"){ //Layout de pagina Inicial
    //CONFIGURAÇÃO INICIAL DA PAGINA
   $this->options = array_merge($this->defaults, $opts);
  
   $config = array(
-	    "tpl_dir"       => $_SERVER["DOCUMENT_ROOT"]. "/views/", 
+	    "tpl_dir"       => $_SERVER["DOCUMENT_ROOT"]. $tpl_dir, 
 		"cache_dir"     => $_SERVER["DOCUMENT_ROOT"]. "/views-cache/", 
 		"debug"         => false 
 	);
