@@ -11,16 +11,16 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
  	public static function login ($login, $password){ //beginning login
 
- 		$sql = new Sql();
+ 		$sql = new Sql();                                                
+                                                                  //'$login'
+ 		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array (
 
- 		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = LOGIN", array (
-
- 			"LOGIN"=>$login //login da function
+ 			":LOGIN"=>$login //login da function
 
  		));
 
  		if (count($results) === 0) {
- 			throw new \Exception("Usuario inexistente ou Senha inválida"); //testando se existe um usuario	
+ 			throw new \Exception("Usuario inexistente ou Senha inválida!!"); //testando se existe um usuario	
  		}
 
  		$data = $results[0]; //variavel data recebe results na posição 0
@@ -35,8 +35,8 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
  			return $user;
 
- 		}else {
- 			throw new \Exception("Usuario inexistente ou Senha inválida");
+ 		} else {
+ 			throw new \Exception("Usuario inexistente ou Senha inválida!!");
  		}
 
  	}//end Login
@@ -45,13 +45,13 @@ use \Hcode\Model;  //Chama o Model class para o User class
  	public static function verifyLogin($inadmin = true){ //verificando se está logado na admin
 
 	 if (
-	    !isset($_SESSION[User::SESSION]) //se não for definida
+	  !isset($_SESSION[User::SESSION]) //se não for definida
 	 	||
 	 	!$_SESSION[User::SESSION] //Se estiver vazia ou perdeu o valor
 	 	||  
-	 	!(int)$_SESSION[User::SESSION] > 0 //verificar o id do usuario
+	 	!(int)$_SESSION[User::SESSION]["iduser"] > 0 //verificar o id do usuario
  		||
- 		(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
+ 		(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin 
 	 ) {
 	    	
 	 header("Location: /admin/login");
@@ -66,6 +66,75 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
   }//end logout
 
- }//end User
+  public static function listAll(){//beginning ListAll
+
+  	$sql = new Sql();
+
+  	return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
+
+  }//end listAll
+
+  public function save(){ //beginning Save
+
+      $sql = new Sql();
+
+     $results = $sql->select("CALL sp_users_save(:pdesperson, :pdeslogin, :pdespassword, :pdesemail, :pnrphone, :pinadmin)", array(
+
+        ":pdesperson"=>$this->getdesperson(),
+        ":pdeslogin"=>$this->getdeslogin(),
+        ":pdespassword"=>$this->getdespassword(),
+        ":pdesemail"=>$this->getdesemail(),
+        ":pnrphone"=>$this->getnrphone(),
+        ":pinadmin"=>$this->inadmin()
+
+      ));
+
+     $this->setData($results[0]);
+
+  }//end Save
+
+  public function get($iduser){ //beginning get
+
+    $sql = new Sql();
+
+    $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY a.iduser = :iduser", array(":iduser"=>$iduser));
+
+    $this->setData($results[0]);
+
+  }//end get
+
+  public function update() {//beginning update
+
+    $sql = new Sql();
+
+     $results = $sql->select("CALL sp_usersupdate_save(:iduser :pdesperson, :pdeslogin, :pdespassword, :pdesemail, :pnrphone, :pinadmin)", array(
+        "iduser"=>$this->getiduser(),
+        ":pdesperson"=>$this->getdesperson(),
+        ":pdeslogin"=>$this->getdeslogin(),
+        ":pdespassword"=>$this->getdespassword(),
+        ":pdesemail"=>$this->getdesemail(),
+        ":pnrphone"=>$this->getnrphone(),
+        ":pinadmin"=>$this->inadmin()
+
+      ));
+
+     $this->setData($results[0]);
+
+
+  }//end update
+
+  public function delete() {//beginning delete
+
+    $sql = new Sql();
+
+    $sql->query("CALL sp_users_delete(:iduser)", array(
+
+      "iduser"=>$this->getiduser()
+
+    ));
+
+  }//end delete
+
+}//end User
 
 ?> 

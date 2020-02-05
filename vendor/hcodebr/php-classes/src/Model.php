@@ -2,7 +2,6 @@
 
 namespace Hcode;
 
-
 class Model{ //beginning Model
 
   private $values = [];
@@ -10,15 +9,15 @@ class Model{ //beginning Model
 	public function __call($name, $args) { //beginning call
 
 		$method = substr($name, 0, 3);
-		$fielName = substr($name, 3, strlen($name));
+		$fieldName = substr($name, 3, strlen($name));
 
 		switch ($method) { //beginning switch
 			case "get":
-				return $this->values[$fielName];
+				return $this->values[$fieldName];
 			  break;
 
 			case "set":
-			    $this->values[$fielName] = $args[0];	
+			    $this->values[$fieldName] = $args[0];	
 			  break;
 		}//end switch
 
@@ -34,7 +33,7 @@ class Model{ //beginning Model
 
 	public function getValues(){ //beggining getValues
 
-		return $this-> $values;
+		return $this->values;
 	} //end getValues 
 
 
