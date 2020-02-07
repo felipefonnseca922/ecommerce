@@ -63,7 +63,7 @@ $app->get('/login/logout', function(){ //exit function
 
 });
 
-$app->get("/admin/users", function(){ //Dando a rota
+$app->get("/admin/users", function(){ // --------- ROTA 1 -----------
 
 	User::verifyLogin(); //verificando se esta logado
 
@@ -71,13 +71,13 @@ $app->get("/admin/users", function(){ //Dando a rota
 
 	$page = new PageAdmin();
 	$page->setTpl("users", array(
-
+		
 		"users"=>$users
 	));
 
 });
 
-$app->get("/admin/users/create", function(){ //Dando a rota
+$app->get("/admin/users/create", function(){ // -------------- ROTA 2 -------------
 
 	User::verifyLogin(); //verificando se esta logado
 
@@ -86,10 +86,9 @@ $app->get("/admin/users/create", function(){ //Dando a rota
 
 });
 
-$app->get("/admin/users/:iduser/delete", function($iduser){//insert and save
+$app->get("/admin/users/:iduser/delete", function($iduser){//------- ROTA 6 ----------
 
 	User::verifyLogin(); //verificando se esta logado
-
 
 	$user = new User();
 
@@ -102,7 +101,7 @@ $app->get("/admin/users/:iduser/delete", function($iduser){//insert and save
 
 });
 
-$app->get("/admin/users/:iduser", function($iduser){ //Dando a rota
+$app->get("/admin/users/:iduser", function($iduser){ // ------ ROTA 3 ------
 
 	User::verifyLogin(); //verificando se esta logado
 
@@ -119,18 +118,17 @@ $app->get("/admin/users/:iduser", function($iduser){ //Dando a rota
 
 });
 
-$app->post("/admin/users/create", function () {
+$app->post("/admin/users/create", function () {// --------- ROTA 4 -----------
 
  	User::verifyLogin();
 
 	$user = new User();
 
- 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+ 	$_POST["inadmin"] = ( isset($_POST["inadmin"]))? 1:0;
 
  	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
 
  		"cost"=>12
-
  	]);
 
  	$user->setData($_POST);
@@ -142,7 +140,7 @@ $app->post("/admin/users/create", function () {
 
 });
 
-$app->post("/admin/users/:iduser", function($iduser){//insert and save
+$app->post("/admin/users/:iduser", function($iduser){// ------------ ROTA 5 -------------
 
 	User::verifyLogin(); //verificando se esta logado
 
@@ -150,7 +148,7 @@ $app->post("/admin/users/:iduser", function($iduser){//insert and save
 
 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
 
-	$user->get((int)$iduser);
+	$user->get((int)$iduser); 
 
 	$user->setData($_POST);
 
@@ -159,6 +157,12 @@ $app->post("/admin/users/:iduser", function($iduser){//insert and save
 	header("Location: /admin/users");
 	exit;
 
+});
+
+$app->delete("/admin/users/:iduser", function($iduser){
+
+	User::verifyLogin(); //verificando se esta logado
+	
 });
 
 

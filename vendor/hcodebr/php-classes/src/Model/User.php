@@ -60,7 +60,7 @@ use \Hcode\Model;  //Chama o Model class para o User class
   } //end verifyLogio
 
   //beginning logout
-  public function logout(){
+  public static function logout(){
 
   	$_SESSION[User::SESSION] = NULL;
 
@@ -78,15 +78,14 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
       $sql = new Sql();
 
-     $results = $sql->select("CALL sp_users_save(:pdesperson, :pdeslogin, :pdespassword, :pdesemail, :pnrphone, :pinadmin)", array(
+     $results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 
-        ":pdesperson"=>$this->getdesperson(),
-        ":pdeslogin"=>$this->getdeslogin(),
-        ":pdespassword"=>$this->getdespassword(),
-        ":pdesemail"=>$this->getdesemail(),
-        ":pnrphone"=>$this->getnrphone(),
-        ":pinadmin"=>$this->inadmin()
-
+        ":desperson"=>$this->getdesperson(),
+        ":deslogin"=>$this->getdeslogin(),
+        ":despassword"=>$this->getdespassword(),
+        ":desemail"=>$this->getdesemail(),
+        ":nrphone"=>$this->getnrphone(),
+        ":inadmin"=>$this->getinadmin()
       ));
 
      $this->setData($results[0]);
@@ -97,7 +96,7 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
     $sql = new Sql();
 
-    $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY a.iduser = :iduser", array(":iduser"=>$iduser));
+    $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser", array(":iduser"=>$iduser));
 
     $this->setData($results[0]);
 
@@ -107,8 +106,9 @@ use \Hcode\Model;  //Chama o Model class para o User class
 
     $sql = new Sql();
 
-     $results = $sql->select("CALL sp_usersupdate_save(:iduser :pdesperson, :pdeslogin, :pdespassword, :pdesemail, :pnrphone, :pinadmin)", array(
-        "iduser"=>$this->getiduser(),
+     $results = $sql->select("CALL sp_usersupdate_save(:piduser :pdesperson, :pdeslogin, :pdespassword, :pdesemail, :pnrphone, :pinadmin)", array(
+
+        "piduser"=>$this->getiduser(),
         ":pdesperson"=>$this->getdesperson(),
         ":pdeslogin"=>$this->getdeslogin(),
         ":pdespassword"=>$this->getdespassword(),
