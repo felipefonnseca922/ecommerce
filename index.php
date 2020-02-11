@@ -70,6 +70,7 @@ $app->get("/admin/users", function(){ // --------- ROTA 1 -----------
 	$users = User::listAll();
 
 	$page = new PageAdmin();
+
 	$page->setTpl("users", array(
 		
 		"users"=>$users
@@ -79,9 +80,8 @@ $app->get("/admin/users", function(){ // --------- ROTA 1 -----------
 
 $app->get("/admin/users/create", function(){ // -------------- ROTA 2 -------------
 
-	User::verifyLogin(); //verificando se esta logado
-
 	$page = new PageAdmin();
+
 	$page->setTpl("users-create");
 
 });
@@ -118,7 +118,7 @@ $app->get("/admin/users/:iduser", function($iduser){ // ------ ROTA 3 ------
 
 });
 
-$app->post("/admin/users/create", function () {// --------- ROTA 4 -----------
+$app->post("/admin/users/create", function() {// --------- ROTA 4 -----------
 
  	User::verifyLogin();
 
@@ -131,7 +131,7 @@ $app->post("/admin/users/create", function () {// --------- ROTA 4 -----------
  		"cost"=>12
  	]);
 
- 	$user->setData($_POST);
+ 	$user->setData($_POST); 
 
 	$user->save();
 
@@ -146,7 +146,7 @@ $app->post("/admin/users/:iduser", function($iduser){// ------------ ROTA 5 ----
 
 	$user = new User();
 
-	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+	$_POST["inadmin"] = (isset($_POST["inadmin"]))? 1:0;
 
 	$user->get((int)$iduser); 
 
@@ -159,12 +159,35 @@ $app->post("/admin/users/:iduser", function($iduser){// ------------ ROTA 5 ----
 
 });
 
-$app->delete("/admin/users/:iduser", function($iduser){
+$app->get("/admin/forgot", function() {
 
-	User::verifyLogin(); //verificando se esta logado
-	
+	$page = new PageAdmin([
+		"header" => false, //desabilitando do admin
+		"footer" => false  //desabilitando do admin
+
+	]);
+	$page->setTpl("forgot");
+
 });
 
+$app->post("/admin/forgot", function() {
+
+	$user = User::getForgot($_POST["email"]);
+
+	header("Location: /admin/forgot/sent");
+
+});
+
+$app->get("/admin/forgot/sent", function(){
+
+	$page = new PageAdmin([
+		"header" => false, //desabilitando do admin
+		"footer" => false  //desabilitando do admin
+
+	]);
+	$page->setTpl("forgot-sent");
+
+});
 
 $app->run();
 
